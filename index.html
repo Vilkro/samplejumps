@@ -124,8 +124,26 @@ thead th {
   border-bottom:1px solid var(--border-color);
   padding:1rem 0.5rem;
   text-align:center;
-  font-size:2.3rem;
+  font-size:clamp(1rem, 2vw, 2.3rem);
 }
+  
+@media (max-width: 768px) {
+  th:nth-child(n+5), td:nth-child(n+5) {
+    min-width: 100px;
+    font-size: clamp(0.8rem, 1.5vw, 1.5rem);
+  }
+
+  td:nth-child(2), th:nth-child(2) {
+    width: 150px;
+    padding-left: 0.5rem;
+  }
+
+  td:nth-child(3), th:nth-child(3) {
+    width: 150px;
+    padding-left: 0.5rem;
+  }
+}
+
 
 th:first-child, td:first-child {
   width:33px;
@@ -178,6 +196,14 @@ tr:nth-child(even) td { background-color: rgba(255,255,255,0.05); }
 #recordsTable thead tr:nth-child(2) th:nth-child(10) { background: rgba(100,200,255,0.10); }
 
 #recordsTable td:hover { cursor: default; }
+
+@media (max-width: 480px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+  tr { margin-bottom: 1rem; }
+  td { text-align: left; }
+}
 
 footer {
   text-align:center;
