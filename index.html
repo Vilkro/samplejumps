@@ -134,7 +134,7 @@ footer a:hover { text-decoration: underline; }
 <body>
 <header>
   <h1>Serious Sam Classic Rocket Jump Records</h1>
-  <p>Dynamic leaderboard with performance-based highlights</p>
+  <p>Detailed jumping records table for jumpers. To apply, join the <a href="https://t.me/Serious_Sam_Hyper_Server" target="_blank">Telegram Channel</a></p>
 </header>
 
 <div class="definitions">
@@ -148,13 +148,13 @@ footer a:hover { text-decoration: underline; }
       <tr>
         <th>Player</th>
         <th>Country</th>
-        <th class="rocket">Rocket VL</th>
-        <th class="rocket">Rocket VLE</th>
-        <th class="rocket">Rocket VIE</th>
-        <th class="rocket">Rocket NVL</th>
-        <th class="cannon">Cannon VL</th>
-        <th class="cannon">Cannon VLE</th>
-        <th class="cannon">Cannon NVL</th>
+        <th class="rocket">VL</th>
+        <th class="rocket">VLE</th>
+        <th class="rocket">VIE</th>
+        <th class="rocket">NVL</th>
+        <th class="cannon">VL</th>
+        <th class="cannon">VLE</th>
+        <th class="cannon">NVL</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -162,8 +162,8 @@ footer a:hover { text-decoration: underline; }
 </div>
 
 <footer>
-  Made by SSC Jumpers • 
-  <a href="https://github.com/YOUR_USERNAME/ssc-rocketjumping" target="_blank">GitHub</a>
+  Made with ChatGPT • 
+  <a href="https://github.com/Vilkro/ssc-rocketjumping" target="_blank">GitHub</a>
 </footer>
 
 <script>
@@ -189,7 +189,7 @@ function getCannonColor(value){
   const val=parseInt(value);
   const min=48,max=58;
   const ratio=Math.min(1,Math.max(0,(val-min)/(max-min)));
-  const r=Math.floor(100*(1-ratio)), g=200, b=255; // vivid blue gradient
+  const r=Math.floor(100*(1-ratio)), g=200, b=Math.floor(255*(1-ratio)); // vivid blue gradient
   return `rgb(${r},${g},${b})`;
 }
 
