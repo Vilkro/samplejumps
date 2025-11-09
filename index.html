@@ -40,6 +40,7 @@ body::before {
   background-size: 60px 60px;
   animation: moveGrid 12s linear infinite alternate;
   z-index: 0;
+  pointer-events: none;
 }
 
 @keyframes moveGrid {
@@ -64,6 +65,8 @@ header p { color: var(--text-secondary); font-size:1.2rem; margin:0.2rem 0; }
 .definitions strong { color: #ffa65c; }
 
 .table-container {
+  position: relative;
+  z-index: 1;
   max-width:1600px;
   width:90%;
   margin:1rem auto;
@@ -84,9 +87,9 @@ thead th {
 }
 
 th:first-child, td:first-child { width:40px; min-width:40px; text-align:center; }
-th:nth-child(2), td.player:nth-of-type(1) { width:220px; min-width:220px; text-align:left; padding-left:1rem; }
-th:nth-child(3), td.player:nth-of-type(2) { width:220px; min-width:220px; text-align:left; padding-left:1rem; }
-th:nth-child(n+4), td.rocket, td.cannon { width:130px; min-width:130px; }
+th:nth-child(2), td:nth-child(2) { width:220px; min-width:220px; text-align:left; padding-left:1rem; }
+th:nth-child(3), td:nth-child(3) { width:220px; min-width:220px; text-align:left; padding-left:1rem; }
+th:nth-child(n+4), td:nth-child(n+4) { width:130px; min-width:130px; }
 
 td {
   padding:1rem 0.5rem;
@@ -97,16 +100,29 @@ td {
   word-wrap:break-word;
   text-shadow:1px 1px 2px rgba(0,0,0,0.7);
   overflow:hidden;
-  transition: background-color 0.2s;
+  transition: background-color 0.20s ease;
 }
+td:nth-child(3) { text-align:left; padding-left:1rem; }
+
 th:last-child, td:last-child { border-right:none; }
 tr:nth-child(even) td { background-color: rgba(255,255,255,0.05); }
 #recordsTable thead tr th { text-align:center; font-size:2.3rem; }
 
-#recordsTable thead tr:nth-child(1) th:nth-child(1) { background: rgba(200,200,200,0.15); }
-#recordsTable thead tr:nth-child(1) th:nth-child(2) { background: rgba(200,200,200,0.15); }
-#recordsTable thead tr:nth-child(1) th:nth-child(n+3):nth-child(-n+6) { background: rgba(255,165,0,0.15); }
-#recordsTable thead tr:nth-child(1) th:nth-child(n+7) { background: rgba(100,200,255,0.15); }
+#recordsTable thead tr:nth-child(1) th { background: rgba(45,45,45,0.95); }
+#recordsTable thead tr:nth-child(2) th:nth-child(1) { background: rgba(200,200,200,0.15); }
+#recordsTable thead tr:nth-child(2) th:nth-child(2) { background: rgba(200,200,200,0.15); }
+#recordsTable thead tr:nth-child(2) th:nth-child(3) { background: rgba(200,200,200,0.15); }
+
+#recordsTable thead tr:nth-child(2) th:nth-child(4),
+#recordsTable thead tr:nth-child(2) th:nth-child(5),
+#recordsTable thead tr:nth-child(2) th:nth-child(6),
+#recordsTable thead tr:nth-child(2) th:nth-child(7) { background: rgba(255,165,0,0.15); }
+
+#recordsTable thead tr:nth-child(2) th:nth-child(8),
+#recordsTable thead tr:nth-child(2) th:nth-child(9),
+#recordsTable thead tr:nth-child(2) th:nth-child(10) { background: rgba(100,200,255,0.15); }
+
+#recordsTable td:hover { cursor: default; }
 
 footer { text-align:center; padding:0.5rem; color: var(--text-secondary); font-size:1rem; }
 footer a { color:#ffa65c; text-decoration:none; }
@@ -130,12 +146,13 @@ footer a:hover { text-decoration:underline; }
 <table id="recordsTable">
 <thead>
 <tr>
-  <th rowspan="2">Pos</th>
+  <th>Pos</th>
   <th colspan="2" style="background: rgba(200,200,200,0.15);">Player info</th>
   <th colspan="4" style="background: rgba(255,165,0,0.15);">Rockets only</th>
   <th colspan="3" style="background: rgba(100,200,255,0.15);">Cannon</th>
 </tr>
 <tr>
+  <th>#</th>
   <th>Name</th>
   <th>Country</th>
   <th>VL</th>
@@ -162,44 +179,66 @@ const records = [
   { player: "Meteor", country: "Germany", rocketVL: "34", rocketVLE: "36", rocketVIE: "32", rocketNVL: "-", cannonVL: "42", cannonVLE: "42", cannonNVL: "54" }
 ];
 
-const rocketRanges = { VL:[23,35], VLE:[24,36], VIE:[22,34], NVL:[28,40] };
-const cannonRanges = { VL:[40,53], VLE:[42,55], NVL:[43,56] };
+const rocketRanges = { VL:[-12,35], VLE:[-12,36], VIE:[-12,34], NVL:[-12,40] };
+const cannonRanges = { VL:[32,53], VLE:[32,55], NVL:[32,56] };
 
-function getRocketColor(value,type){
+function getRocketColor(value, type){
   if(value==="—" || value==="-" ) return "#aaa";
-  const val=parseFloat(value);
-  const [min,max] = rocketRanges[type] || [-12,40];
-  const ratio = (val-min)/(max-min);
-  let r = 255;
-  let g = Math.floor(200 - 120*ratio);
-  let b = Math.floor(60 * (1 - ratio));
-  if(val>max){
-    const extra = Math.min(4,val-max);
-    b += 40*extra;
-    r -= 10*extra;
+  const v = parseFloat(value);
+  const [min, max] = rocketRanges[type] || [-12,40];
+  if (isNaN(v)) return "#aaa";
+
+  const baseRatio = (v - min) / (max - min);
+  const ratio = Math.max(0, Math.min(1, baseRatio));
+
+  const rBase = 255;
+  const gBase = Math.round(200 - 120 * ratio);
+  const bBase = Math.round(80 - 20 * ratio);
+
+  let r = rBase;
+  let g = gBase;
+  let b = bBase;
+
+  if (v > max) {
+    const extra = Math.min(4, v - max);
+    r = Math.min(255, r + Math.round(12 * extra));
+    g = Math.max(0, g - Math.round(30 * extra));
+    b = Math.min(255, b + Math.round(45 * extra));
   }
+
   return `rgb(${r},${Math.max(0,g)},${Math.min(255,b)})`;
 }
 
-function getCannonColor(value,type){
+function getCannonColor(value, type){
   if(value==="—" || value==="-" ) return "#aaa";
-  const val=parseFloat(value);
-  const [min,max] = cannonRanges[type] || [-13,56];
-  const ratio = (val-min)/(max-min);
-  let r = Math.floor(0 + 120*ratio);
-  let g = Math.floor(180 - 60*ratio);
-  let b = Math.floor(180 + 75*ratio);
-  if(val>max){
-    const extra = Math.min(4,val-max);
-    r += 25*extra;
-    b += 15*extra;
+  const v = parseFloat(value);
+  const [min, max] = cannonRanges[type] || [32,56];
+  if (isNaN(v)) return "#aaa";
+
+  const baseRatio = (v - min) / (max - min);
+  const ratio = Math.max(0, Math.min(1, baseRatio));
+
+  const rBase = Math.round(0 + 120 * ratio);
+  const gBase = Math.round(180 - 60 * ratio);
+  const bBase = Math.round(180 + 75 * ratio);
+
+  let r = rBase;
+  let g = gBase;
+  let b = bBase;
+
+  if (v > max) {
+    const extra = Math.min(4, v - max);
+    r = Math.min(255, r + Math.round(30 * extra));
+    g = Math.max(0, g - Math.round(40 * extra));
+    b = Math.min(255, b + Math.round(12 * extra));
   }
+
   return `rgb(${Math.min(255,r)},${Math.max(0,g)},${Math.min(255,b)})`;
 }
 
 function getRowSum(r){
   const vals = [r.rocketVL,r.rocketVLE,r.rocketVIE,r.rocketNVL,r.cannonVL,r.cannonVLE,r.cannonNVL];
-  return vals.reduce((acc,v)=>{ const n=parseInt(v); return acc + (isNaN(n)?0:n); },0);
+  return vals.reduce((acc,v)=>{ const n=parseFloat(v); return acc + (isNaN(n)?0:n); },0);
 }
 records.sort((a,b)=>getRowSum(b)-getRowSum(a));
 
@@ -230,26 +269,29 @@ records.forEach((r,index)=>{
 });
 
 const table = document.getElementById('recordsTable');
-const cells = table.querySelectorAll('tbody td');
-cells.forEach(cell=>{
-  cell.addEventListener('mouseenter', ()=>{
-    const colIndex = cell.cellIndex;
-    const row = cell.parentElement;
-    let glowColor = cell.classList.contains('cannon') ? 'var(--highlight-cannon)' :
-                    cell.classList.contains('rocket') ? 'var(--highlight-rocket)' : 'var(--highlight-player)';
-    row.querySelectorAll('td').forEach(td=>td.style.backgroundColor=glowColor);
-    table.querySelectorAll('tbody tr').forEach(tr=>{
-      if(tr.children[colIndex]) tr.children[colIndex].style.backgroundColor = glowColor;
+function attachHover() {
+  const cells = table.querySelectorAll('tbody td');
+  cells.forEach(cell=>{
+    cell.addEventListener('mouseenter', ()=>{
+      const colIndex = cell.cellIndex;
+      const row = cell.parentElement;
+      let glowColor = cell.classList.contains('cannon') ? 'var(--highlight-cannon)' :
+                      cell.classList.contains('rocket') ? 'var(--highlight-rocket)' : 'var(--highlight-player)';
+      row.querySelectorAll('td').forEach(td=>td.style.backgroundColor=glowColor);
+      table.querySelectorAll('tbody tr').forEach(tr=>{
+        if(tr.children[colIndex]) tr.children[colIndex].style.backgroundColor = glowColor;
+      });
+    });
+    cell.addEventListener('mouseleave', ()=>{
+      const colIndex = cell.cellIndex;
+      table.querySelectorAll('tbody tr').forEach(tr=>{
+        if(tr.children[colIndex]) tr.children[colIndex].style.backgroundColor = '';
+      });
+      cell.parentElement.querySelectorAll('td').forEach(td=>td.style.backgroundColor='');
     });
   });
-  cell.addEventListener('mouseleave', ()=>{
-    const colIndex = cell.cellIndex;
-    table.querySelectorAll('tbody tr').forEach(tr=>{
-      if(tr.children[colIndex]) tr.children[colIndex].style.backgroundColor = '';
-    });
-    cell.parentElement.querySelectorAll('td').forEach(td=>td.style.backgroundColor='');
-  });
-});
+}
+attachHover();
 </script>
 </body>
 </html>
