@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SSC Rocket Jump Records</title>
+<title>Serious Sam Jump Records</title>
 
-<!-- Favicon / tab icon -->
-<link rel="icon" type="image/png" href="icon.png"> <!-- place your icon file in the same folder -->
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="favicon.png">
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap');
@@ -17,6 +17,8 @@
   --text-main: #e0e0e0;
   --text-secondary: #aaa;
   --border-color: #555;
+  --rocket-color: rgba(255,165,0,0.25);
+  --cannon-color: rgba(100,200,255,0.25);
 }
 
 body {
@@ -30,7 +32,6 @@ body {
   min-height: 100vh;
 }
 
-/* Black grid background */
 body::before {
   content: "";
   position: fixed;
@@ -43,10 +44,7 @@ body::before {
   z-index: 0;
 }
 
-@keyframes moveGrid {
-  from { background-position: 0 0; }
-  to { background-position: 40px 40px; }
-}
+@keyframes moveGrid { from { background-position:0 0;} to {background-position:40px 40px;} }
 
 header {
   text-align: center;
@@ -96,11 +94,7 @@ table {
   table-layout: fixed;
 }
 
-thead {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-}
+thead { position: sticky; top:0; z-index:2; }
 
 /* Group header row */
 thead tr.group th {
@@ -111,18 +105,9 @@ thead tr.group th {
   padding: 0.8rem 0;
 }
 
-thead tr.group th:nth-child(1),
-thead tr.group th:nth-child(2) {
-  background: rgba(200,200,200,0.15); /* gray for Player Info */
-}
-
-thead tr.group th:nth-child(n+3):nth-child(-n+6) {
-  background: rgba(255,165,0,0.15); /* orange for Rocket */
-}
-
-thead tr.group th:nth-child(n+7):nth-child(-n+9) {
-  background: rgba(100,200,255,0.15); /* blue for Cannon */
-}
+thead tr.group th.player-group { width: 440px; background: rgba(200,200,200,0.15); }
+thead tr.group th.rocket-group { background: rgba(255,165,0,0.15); }
+thead tr.group th.cannon-group { background: rgba(100,200,255,0.15); }
 
 /* Column headers */
 thead tr:not(.group) th {
@@ -143,45 +128,41 @@ th, td {
   text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
 }
 
-table th:first-child,
-table td:first-child {
-  width: 220px;
-  text-align: left;
-  padding-left: 1rem;
+/* Fixed column widths */
+th:first-child, td:first-child { width: 220px; text-align:left; padding-left:1rem;}
+th:nth-child(2), td:nth-child(2) { width: 220px; text-align:left; padding-left:1rem; }
+
+/* Rocket 4 cols evenly */
+th:nth-child(3), td:nth-child(3),
+th:nth-child(4), td:nth-child(4),
+th:nth-child(5), td:nth-child(5),
+th:nth-child(6), td:nth-child(6) {
+  width: calc((100% - 440px)/2/2); /* Rocket group evenly split: 4 columns in half remaining */
 }
 
-table th:nth-child(2),
-table td:nth-child(2) {
-  width: 120px;
+/* Cannon 3 cols evenly */
+th:nth-child(7), td:nth-child(7),
+th:nth-child(8), td:nth-child(8),
+th:nth-child(9), td:nth-child(9) {
+  width: calc((100% - 440px)/2/3); /* Cannon group evenly split remaining half */
 }
 
-th:last-child, td:last-child { border-right: none; }
-
-th {
-  font-weight: 600;
-}
+th:last-child, td:last-child { border-right:none; }
 
 tr:nth-child(even) td { background-color: rgba(255,255,255,0.05); }
 
-/* Glow highlight for row + column hover */
-.highlighted {
-  background-color: rgba(255, 184, 77, 0.25) !important;
-}
+/* Hover glow by type */
+.highlighted { background-color: rgba(255,184,77,0.25) !important; }
 
-footer {
-  text-align: center;
-  padding: 0.5rem;
-  color: var(--text-secondary);
-  font-size: 1rem;
-}
-footer a { color: #ffa65c; text-decoration: none; }
-footer a:hover { text-decoration: underline; }
+footer { text-align:center; padding:0.5rem; color: var(--text-secondary); font-size:1rem; }
+footer a { color:#ffa65c; text-decoration:none; }
+footer a:hover { text-decoration:underline; }
 </style>
 </head>
 <body>
 <header>
-  <h1>Serious Sam Classic Rocket Jump Records</h1>
-  <p>Detailed jumping records table for jumpers. To apply, join the <a href="https://t.me/Serious_Sam_Hyper_Server" target="_blank" style="color:#ffa65c;">Telegram Channel</a>.</p>
+<h1>Serious Sam Classic Rocket Jump Records</h1>
+<p>Detailed jumping records table for jumpers. To apply, join the <a href="https://t.me/Serious_Sam_Hyper_Server" target="_blank" style="color:#ffa65c;">Telegram Channel</a>.</p>
 </header>
 
 <div class="definitions">
@@ -190,103 +171,78 @@ footer a:hover { text-decoration: underline; }
 </div>
 
 <div class="table-container">
-  <table id="recordsTable">
-    <thead>
-      <!-- Group header row -->
-      <tr class="group">
-        <th colspan="2">Player Info</th>
-        <th colspan="4">Rocket</th>
-        <th colspan="3">Cannon</th>
-      </tr>
-      <!-- Detailed headers row -->
-      <tr>
-        <th>Player</th>
-        <th>Country</th>
-        <th>VL</th>
-        <th>VLE</th>
-        <th>VIE</th>
-        <th>NVL</th>
-        <th>VL</th>
-        <th>VLE</th>
-        <th>NVL</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+<table id="recordsTable">
+<thead>
+<tr class="group">
+<th class="player-group" colspan="2">Player</th>
+<th class="rocket-group" colspan="4">Rocket jumps</th>
+<th class="cannon-group" colspan="3">Cannon jumps</th>
+</tr>
+<tr>
+<th>Name</th>
+<th>Country</th>
+<th>VL</th>
+<th>VLE</th>
+<th>VIE</th>
+<th>NVL</th>
+<th>VL</th>
+<th>VLE</th>
+<th>NVL</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
 </div>
 
-<footer>
-  Made by SSC Jumpers
-</footer>
+<footer>Made with ChatGPT by labubu</footer>
 
 <script>
 const records = [
-  { player: "Andrey", country: "KZ", rocketVL: "32", rocketVLE: "35", rocketVIE: "39", rocketNVL: "36", cannonVL: "40", cannonVLE: "50", cannonNVL: "56" },
-  { player: "Sasha", country: "RU", rocketVL: "37", rocketVLE: "38", rocketVIE: "—", rocketNVL: "42", cannonVL: "56", cannonVLE: "54", cannonNVL: "58" }
+{ player: "Andrey", country: "KZ", rocketVL: "32", rocketVLE: "35", rocketVIE: "39", rocketNVL: "36", cannonVL: "40", cannonVLE: "50", cannonNVL: "56" },
+{ player: "Sasha", country: "RU", rocketVL: "37", rocketVLE: "38", rocketVIE: "—", rocketNVL: "42", cannonVL: "56", cannonVLE: "54", cannonNVL: "58" }
 ];
 
-function getRocketColor(value,type){
-  if(value==="—") return "#aaa";
-  const val=parseInt(value);
-  let min,max;
-  if(type==="NVL"){ min=32; max=42; } 
-  else { min=28; max=40; }
-  const ratio=Math.min(1,Math.max(0,(val-min)/(max-min)));
-  const r=255, g=Math.floor(165*(1-ratio)), b=92;
-  return `rgb(${r},${g},${b})`;
-}
-
-function getCannonColor(value){
-  if(value==="—") return "#aaa";
-  const val=parseInt(value);
-  const min=32,max=58;
-  const ratio=Math.min(1,Math.max(0,(val-min)/(max-min)));
-  const r=Math.floor(170*(1-ratio)), g=Math.floor(235*(1-ratio)), b=255;
-  return `rgb(${r},${g},${b})`;
-}
+function getRocketColor(value,type){if(value==="—") return "#aaa"; const val=parseInt(value); let min,max;if(type==="NVL"){min=32;max=42;}else{min=28;max=40;} const ratio=Math.min(1,Math.max(0,(val-min)/(max-min))); const r=255,g=Math.floor(165*(1-ratio)),b=92;return `rgb(${r},${g},${b})`;}
+function getCannonColor(value){if(value==="—") return "#aaa"; const val=parseInt(value); const min=32,max=58; const ratio=Math.min(1,Math.max(0,(val-min)/(max-min))); const r=Math.floor(170*(1-ratio)), g=Math.floor(235*(1-ratio)), b=255; return `rgb(${r},${g},${b})`; }
 
 const tbody=document.querySelector("#recordsTable tbody");
 records.forEach(r=>{
   const row=document.createElement("tr");
   row.innerHTML=`
-    <td>${r.player}</td>
-    <td>${r.country}</td>
-    <td class="rocket">${r.rocketVL}</td>
-    <td class="rocket">${r.rocketVLE}</td>
-    <td class="rocket">${r.rocketVIE}</td>
-    <td class="rocket">${r.rocketNVL}</td>
-    <td class="cannon">${r.cannonVL}</td>
-    <td class="cannon">${r.cannonVLE}</td>
-    <td class="cannon">${r.cannonNVL}</td>
-  `;
-  row.querySelectorAll('td.rocket').forEach((td,i)=>{
-    const type=(i===3)?"NVL":"VL";
-    td.style.color=getRocketColor(td.textContent,type);
-  });
-  row.querySelectorAll('td.cannon').forEach(td=>{
-    td.style.color=getCannonColor(td.textContent);
-  });
+  <td>${r.player}</td>
+  <td>${r.country}</td>
+  <td class="rocket">${r.rocketVL}</td>
+  <td class="rocket">${r.rocketVLE}</td>
+  <td class="rocket">${r.rocketVIE}</td>
+  <td class="rocket">${r.rocketNVL}</td>
+  <td class="cannon">${r.cannonVL}</td>
+  <td class="cannon">${r.cannonVLE}</td>
+  <td class="cannon">${r.cannonNVL}</td>`;
+  row.querySelectorAll('td.rocket').forEach((td,i)=>{ const type=(i===3)?"NVL":"VL"; td.style.color=getRocketColor(td.textContent,type);});
+  row.querySelectorAll('td.cannon').forEach(td=>{ td.style.color=getCannonColor(td.textContent);});
   tbody.appendChild(row);
 });
 
-// Hover glow
-const table = document.getElementById('recordsTable');
-const cells = table.querySelectorAll('tbody td'); // only tbody cells
-cells.forEach(cell => {
-  cell.addEventListener('mouseenter', () => {
-    const colIndex = cell.cellIndex;
-    const row = cell.parentElement;
-    row.classList.add('highlighted');
-    table.querySelectorAll('tbody tr').forEach(tr => {
-      if(tr.children[colIndex]) tr.children[colIndex].classList.add('highlighted');
+// Hover glow with color per group
+const table=document.getElementById('recordsTable');
+const cells=table.querySelectorAll('tbody td');
+cells.forEach(cell=>{
+  cell.addEventListener('mouseenter',()=>{
+    const colIndex=cell.cellIndex;
+    const row=cell.parentElement;
+    let glowColor='rgba(255,184,77,0.25)'; // default Rocket
+    if(colIndex>=6) glowColor='rgba(100,200,255,0.25)'; // Cannon
+    row.style.backgroundColor=glowColor;
+    table.querySelectorAll('tbody tr').forEach(tr=>{
+      if(tr.children[colIndex]) tr.children[colIndex].style.backgroundColor=glowColor;
     });
   });
-  cell.addEventListener('mouseleave', () => {
-    const colIndex = cell.cellIndex;
-    const row = cell.parentElement;
-    row.classList.remove('highlighted');
-    table.querySelectorAll('tbody tr').forEach(tr => {
-      if(tr.children[colIndex]) tr.children[colIndex].classList.remove('highlighted');
+  cell.addEventListener('mouseleave',()=>{
+    const colIndex=cell.cellIndex;
+    const row=cell.parentElement;
+    row.style.backgroundColor='';
+    table.querySelectorAll('tbody tr').forEach(tr=>{
+      if(tr.children[colIndex]) tr.children[colIndex].style.backgroundColor='';
     });
   });
 });
