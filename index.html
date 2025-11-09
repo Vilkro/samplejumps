@@ -30,6 +30,7 @@ body {
   min-height: 100vh;
 }
 
+/* grid overlay - allow pointer events to pass through */
 body::before {
   content: "";
   position: fixed;
@@ -40,6 +41,7 @@ body::before {
   background-size: 60px 60px;
   animation: moveGrid 12s linear infinite alternate;
   z-index: 0;
+  pointer-events: none; /* <--- prevents blocking hover */
 }
 
 @keyframes moveGrid {
@@ -64,6 +66,8 @@ header p { color: var(--text-secondary); font-size:1.2rem; margin:0.2rem 0; }
 .definitions strong { color: #ffa65c; }
 
 .table-container {
+  position: relative; /* put above overlay */
+  z-index: 1;
   max-width:1600px;
   width:90%;
   margin:1rem auto;
@@ -74,28 +78,43 @@ header p { color: var(--text-secondary); font-size:1.2rem; margin:0.2rem 0; }
   box-shadow:0 4px 15px rgba(0,0,0,0.2);
 }
 
+/* table layout */
 table { border-collapse:collapse; width:100%; table-layout: fixed; }
 thead th { border-right:1px solid var(--border-color); border-bottom:1px solid var(--border-color);
-  padding:1rem 0.5rem; text-align:center; font-size:2.3rem; }
+  padding:1rem 0.5rem; text-align:center; font-size:2.3rem; background: rgba(45,45,45,0.95); }
 
-th:first-child, td:first-child { width:40px; min-width:40px; text-align:center; }
-th:nth-child(2), td.player:nth-of-type(1) { width:220px; min-width:220px; text-align:left; padding-left:1rem; }
-th:nth-child(3), td.player:nth-of-type(2) { width:220px; min-width:220px; text-align:left; padding-left:1rem; }
-th:nth-child(n+4), td.rocket, td.cannon { width:140px; min-width:140px; }
+/* column widths (explicit by column index) */
+th:first-child, td:first-child { width:40px; min-width:40px; text-align:center; } /* numeration column */
+th:nth-child(2), td:nth-child(2) { width:220px; min-width:220px; text-align:left; padding-left:1rem; } /* Name */
+th:nth-child(3), td:nth-child(3) { width:220px; min-width:220px; text-align:left; padding-left:1rem; } /* Country */
 
+/* remaining columns (rockets + cannon) */
+th:nth-child(n+4), td:nth-child(n+4) { width:130px; min-width:130px; }
+
+/* cells */
 td { padding:1rem 0.5rem; text-align:center; border-right:1px solid var(--border-color);
   border-bottom:1px solid var(--border-color); font-size:2.3rem;
   word-wrap:break-word; text-shadow:1px 1px 2px rgba(0,0,0,0.7); overflow:hidden;
-  transition: background-color 0.2s; }
+  transition: background-color 0.15s; }
 th:last-child, td:last-child { border-right:none; }
 tr:nth-child(even) td { background-color: rgba(255,255,255,0.05); }
-#recordsTable thead tr th { text-align:center; font-size:2.3rem; }
+#recordsTable thead tr th { text-align:center; font-size:2.0rem; }
 
-/* Second header row same color as group */
+/* Second header row same color as group (match group above) */
+#recordsTable thead tr:nth-child(1) th { background: rgba(45,45,45,0.95); } /* ensure consistent */
+#recordsTable thead tr:nth-child(2) th:nth-child(1) { background: transparent; } /* empty/num */
 #recordsTable thead tr:nth-child(2) th:nth-child(2),
 #recordsTable thead tr:nth-child(2) th:nth-child(3) { background: rgba(200,200,200,0.15); }
-#recordsTable thead tr:nth-child(2) th:nth-child(n+4):nth-child(-n+7) { background: rgba(255,165,0,0.15); }
-#recordsTable thead tr:nth-child(2) th:nth-child(n+8) { background: rgba(100,200,255,0.15); }
+#recordsTable thead tr:nth-child(2) th:nth-child(4),
+#recordsTable thead tr:nth-child(2) th:nth-child(5),
+#recordsTable thead tr:nth-child(2) th:nth-child(6),
+#recordsTable thead tr:nth-child(2) th:nth-child(7) { background: rgba(255,165,0,0.15); }
+#recordsTable thead tr:nth-child(2) th:nth-child(8),
+#recordsTable thead tr:nth-child(2) th:nth-child(9),
+#recordsTable thead tr:nth-child(2) th:nth-child(10) { background: rgba(100,200,255,0.15); }
+
+/* subtle hover fallback (JS does the row/column highlight) */
+#recordsTable td:hover { cursor: default; }
 
 footer { text-align:center; padding:0.5rem; color: var(--text-secondary); font-size:1rem; }
 footer a { color:#ffa65c; text-decoration:none; }
@@ -117,22 +136,24 @@ footer a:hover { text-decoration:underline; }
 <div class="table-container">
 <table id="recordsTable">
 <thead>
+<!-- important: add empty cell for the # column so colspan aligns -->
 <tr>
+  <th></th>
   <th colspan="2" style="background: rgba(200,200,200,0.15);">Player info</th>
   <th colspan="4" style="background: rgba(255,165,0,0.15);">Rockets only</th>
   <th colspan="3" style="background: rgba(100,200,255,0.15);">Cannon</th>
 </tr>
 <tr>
-  <th>#</th>
-  <th>Name</th>
-  <th>Country</th>
-  <th>VL</th>
-  <th>VLE</th>
-  <th>VIE</th>
-  <th>NVL</th>
-  <th>VL</th>
-  <th>VLE</th>
-  <th>NVL</th>
+  <th></th>
+  <th style="background: rgba(200,200,200,0.15);">Name</th>
+  <th style="background: rgba(200,200,200,0.15);">Country</th>
+  <th style="background: rgba(255,165,0,0.15);">VL</th>
+  <th style="background: rgba(255,165,0,0.15);">VLE</th>
+  <th style="background: rgba(255,165,0,0.15);">VIE</th>
+  <th style="background: rgba(255,165,0,0.15);">NVL</th>
+  <th style="background: rgba(100,200,255,0.15);">VL</th>
+  <th style="background: rgba(100,200,255,0.15);">VLE</th>
+  <th style="background: rgba(100,200,255,0.15);">NVL</th>
 </tr>
 </thead>
 <tbody></tbody>
@@ -142,6 +163,7 @@ footer a:hover { text-decoration:underline; }
 <footer>Table of verified jumps</footer>
 
 <script>
+/* === DATA (unchanged) === */
 const records = [
   { player: "Mask", country: "Russia", rocketVL: "36", rocketVLE: "38", rocketVIE: "35", rocketNVL: "42", cannonVL: "53", cannonVLE: "48", cannonNVL: "52" },
   { player: "Val", country: "Kazakhstan", rocketVL: "32", rocketVLE: "36", rocketVIE: "32", rocketNVL: "40", cannonVL: "54", cannonVLE: "56", cannonNVL: "58" },
@@ -150,47 +172,94 @@ const records = [
   { player: "Meteor", country: "Germany", rocketVL: "34", rocketVLE: "36", rocketVIE: "32", rocketNVL: "-", cannonVL: "42", cannonVLE: "42", cannonNVL: "54" }
 ];
 
-function getRocketColor(value,type){
-  if(value==="—" || value==="-" ) return "#aaa";
-  const val=parseInt(value);
-  let min,max;
-  if(type==="NVL"){min=36;max=42;} else {min=30;max=40;}
-  const ratio=Math.min(1,Math.max(0,(val-min)/(max-min)));
-  const r=255,g=Math.floor(165*(1-ratio)),b=92;
-  return `rgb(${r},${g},${b})`;
-}
+/* === ranges requested by you ===
+   rockets 'high' thresholds:
+     VL=35, VLE=36, VIE=34, NVL=40
+   cannon 'high' thresholds:
+     VL=53, VLE=55, NVL=56
+   mins: rocket min = -12, cannon min = -13
+*/
+const rocketRanges = {
+  VL:  { min: -12, max: 35 },
+  VLE: { min: -12, max: 36 },
+  VIE: { min: -12, max: 34 },
+  NVL: { min: -12, max: 40 }
+};
+const cannonRanges = {
+  VL:  { min: -13, max: 53 },
+  VLE: { min: -13, max: 55 },
+  NVL: { min: -13, max: 56 }
+};
 
-// Cannon color with two ranges
-function getCannonColor(value,type){
-  if(value==="—" || value==="-" ) return "#aaa";
-  const val=parseInt(value);
-  let threshold, min1, max1, min2, max2;
-  switch(type){
-    case "VL": threshold=52; min1=46; max1=threshold; min2=threshold+1; max2=56; break;
-    case "VLE": threshold=53; min1=50; max1=threshold; min2=threshold+1; max2=57; break;
-    case "NVL": threshold=54; min1=52; max1=threshold; min2=threshold+1; max2=58; break;
-    default: min1=44; max1=54; min2=55; max2=58;
-  }
-  let ratio;
-  if(val<=threshold){
-    ratio = (val-min1)/(max1-min1);
-    return `rgb(${Math.floor(120*ratio+50)},${Math.floor(200*(1-ratio))},255)`;
+/* rocket coloring:
+   - below/within range => warmish gradient (orange → yellow)
+   - above max => cooler (towards blue) and gets more blue the higher it is
+*/
+function getRocketColor(value, type) {
+  if (value === "—" || value === "-") return "#888";
+  const v = parseFloat(value);
+  const { min, max } = rocketRanges[type];
+  if (isNaN(v)) return "#888";
+
+  if (v <= max) {
+    // warm: map min..max to orange -> yellow
+    const ratio = Math.min(1, Math.max(0, (v - min) / (max - min)));
+    const r = 255;
+    const g = Math.floor(110 + 145 * ratio); // 110..255
+    const b = Math.floor(60 + 20 * (1 - ratio)); // 60..80
+    return `rgb(${r},${g},${b})`;
   } else {
-    ratio = (val-min2)/(max2-min2);
-    return `rgb(${Math.min(255, 180+75*ratio)},${Math.floor(255*(1-ratio))},255)`;
+    // above max: go cool (increase blue, decrease red/green)
+    const excess = Math.min(1, (v - max) / 8); // scale excess up to +8 meters
+    const r = Math.floor(255 * (1 - 0.7 * excess));
+    const g = Math.floor(255 * (1 - 1.0 * excess));
+    const b = Math.floor(200 + 55 * excess); // up to 255
+    return `rgb(${r},${g},${b})`;
   }
 }
 
-function getRowSum(r){
-  const vals = [r.rocketVL,r.rocketVLE,r.rocketVIE,r.rocketNVL,r.cannonVL,r.cannonVLE,r.cannonNVL];
-  return vals.reduce((acc,v)=>{ const n=parseInt(v); return acc + (isNaN(n)?0:n); },0);
-}
-records.sort((a,b)=>getRowSum(b)-getRowSum(a));
+/* cannon coloring with two ranges:
+   - main range (min..max): blue -> cyan (low->mid)
+   - above max: bright purple-ish highlight, gets stronger per meter above max
+*/
+function getCannonColor(value, type) {
+  if (value === "—" || value === "-") return "#888";
+  const v = parseFloat(value);
+  const { min, max } = cannonRanges[type];
+  if (isNaN(v)) return "#888";
 
-const tbody=document.querySelector("#recordsTable tbody");
-records.forEach((r,index)=>{
-  const row=document.createElement("tr");
-  row.innerHTML=`
+  if (v <= max) {
+    // blue to cyan across range
+    const ratio = Math.min(1, Math.max(0, (v - min) / (max - min)));
+    const r = Math.floor(40 * (1 - ratio));           // small red at low
+    const g = Math.floor(120 + 120 * ratio);         // 120..240
+    const b = 255;                                   // blue stays full
+    return `rgb(${r},${g},${b})`;
+  } else {
+    // above max: vivid purple highlight, stronger per meter
+    const excess = Math.min(1, (v - max) / 6); // scale up to +6 meters for full effect
+    const r = Math.floor(140 + 115 * excess); // 140..255
+    const g = Math.floor(200 * (1 - 0.9 * excess)); // drop green
+    const b = Math.floor(255 - 30 * excess); // slightly reduce blue for purple tint
+    return `rgb(${r},${g},${b})`;
+  }
+}
+
+/* sorting by sum */
+function getRowSum(r) {
+  const vals = [r.rocketVL, r.rocketVLE, r.rocketVIE, r.rocketNVL, r.cannonVL, r.cannonVLE, r.cannonNVL];
+  return vals.reduce((acc, v) => {
+    const n = parseFloat(v);
+    return acc + (isNaN(n) ? 0 : n);
+  }, 0);
+}
+records.sort((a, b) => getRowSum(b) - getRowSum(a));
+
+/* populate table (adds row numbers) */
+const tbody = document.querySelector("#recordsTable tbody");
+records.forEach((r, index) => {
+  const row = document.createElement("tr");
+  row.innerHTML = `
     <td>${index + 1}</td>
     <td class="player">${r.player}</td>
     <td class="player">${r.country}</td>
@@ -202,39 +271,46 @@ records.forEach((r,index)=>{
     <td class="cannon">${r.cannonVLE}</td>
     <td class="cannon">${r.cannonNVL}</td>
   `;
-  row.querySelectorAll('td.rocket').forEach((td,i)=>{
-    const type = (i===3) ? "NVL" : "VL";
-    td.style.color=getRocketColor(td.textContent,type);
+  const rocketTypes = ["VL", "VLE", "VIE", "NVL"];
+  row.querySelectorAll('td.rocket').forEach((td, i) => {
+    td.style.color = getRocketColor(td.textContent, rocketTypes[i]);
   });
-  row.querySelectorAll('td.cannon').forEach((td,i)=>{
-    const type = ["VL","VLE","NVL"][i];
-    td.style.color = getCannonColor(td.textContent,type);
+  const cannonTypes = ["VL", "VLE", "NVL"];
+  row.querySelectorAll('td.cannon').forEach((td, i) => {
+    td.style.color = getCannonColor(td.textContent, cannonTypes[i]);
   });
   tbody.appendChild(row);
 });
 
-// Hover glow: row + column
+/* Hover glow: row + column — works now because overlay is pointer-events:none */
 const table = document.getElementById('recordsTable');
-const cells = table.querySelectorAll('tbody td');
-cells.forEach(cell=>{
-  cell.addEventListener('mouseenter', ()=>{
-    const colIndex = cell.cellIndex;
-    const row = cell.parentElement;
-    let glowColor = cell.classList.contains('cannon') ? 'var(--highlight-cannon)' :
-                    cell.classList.contains('rocket') ? 'var(--highlight-rocket)' : 'var(--highlight-player)';
-    row.querySelectorAll('td').forEach(td=>td.style.backgroundColor=glowColor);
-    table.querySelectorAll('tbody tr').forEach(tr=>{
-      if(tr.children[colIndex]) tr.children[colIndex].style.backgroundColor = glowColor;
+
+function addHoverHandlers() {
+  const cells = table.querySelectorAll('tbody td');
+  cells.forEach(cell => {
+    cell.addEventListener('mouseenter', () => {
+      const colIndex = cell.cellIndex;
+      const row = cell.parentElement;
+      const glowColor = cell.classList.contains('cannon') ? 'var(--highlight-cannon)' :
+                        cell.classList.contains('rocket') ? 'var(--highlight-rocket)' :
+                        'var(--highlight-player)';
+      // highlight row
+      row.querySelectorAll('td').forEach(td => td.style.backgroundColor = glowColor);
+      // highlight column
+      table.querySelectorAll('tbody tr').forEach(tr => {
+        if (tr.children[colIndex]) tr.children[colIndex].style.backgroundColor = glowColor;
+      });
+    });
+    cell.addEventListener('mouseleave', () => {
+      const colIndex = cell.cellIndex;
+      table.querySelectorAll('tbody tr').forEach(tr => {
+        if (tr.children[colIndex]) tr.children[colIndex].style.backgroundColor = '';
+      });
+      cell.parentElement.querySelectorAll('td').forEach(td => td.style.backgroundColor = '');
     });
   });
-  cell.addEventListener('mouseleave', ()=>{
-    const colIndex = cell.cellIndex;
-    table.querySelectorAll('tbody tr').forEach(tr=>{
-      if(tr.children[colIndex]) tr.children[colIndex].style.backgroundColor = '';
-    });
-    cell.parentElement.querySelectorAll('td').forEach(td=>td.style.backgroundColor='');
-  });
-});
+}
+addHoverHandlers();
 </script>
 </body>
 </html>
