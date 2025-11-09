@@ -97,6 +97,7 @@ footer a:hover { text-decoration:underline; }
 <header>
 <h1>Rocket Jump Records in Serious Sam Classic</h1>
 <p>Detailed jumping records table for jumpers. To apply, join the <a href="https://t.me/Serious_Sam_Hyper_Server" target="_blank" style="color:#ffa65c;">Telegram Channel</a>.</p>
+<p>Players are sorted by the sum of their values. Bigger jumps have lower probability of success.</p>
 </header>
 
 <div class="definitions">
@@ -128,7 +129,7 @@ footer a:hover { text-decoration:underline; }
 </table>
 </div>
 
-<footer>hog riders sorted by sum of all values</footer>
+<footer>Table of verified jumps</footer>
 
 <script>
 const records = [
@@ -154,13 +155,13 @@ function getCannonColor(value,type){
   const val=parseInt(value);
   let min,max;
   switch(type){
-    case "VL": min = 44; max = 56; break;
-    case "VLE": min = 45; max = 57; break;
-    case "NVL": min = 46; max = 58; break;
+    case "VL": min = 46; max = 56; break;
+    case "VLE": min = 50; max = 57; break;
+    case "NVL": min = 52; max = 58; break;
     default: min = 44; max = 58;
   }
   const ratio=Math.min(1,Math.max(0,(val-min)/(max-min)));
-  const r = Math.floor(120*ratio);
+  const r = Math.floor(120*ratio+50);
   const g = Math.floor(200*(1-ratio));
   const b = Math.floor(255);
   return `rgb(${r},${g},${b})`;
