@@ -31,8 +31,8 @@ body::before {
   position: fixed;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255,140,0,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,140,0,0.05) 1px, transparent 1px);
+    linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
   background-size: 40px 40px;
   z-index: 0;
   animation: moveGrid 15s linear infinite;
@@ -74,7 +74,7 @@ header p {
 .definitions strong { color: #ffa65c; }
 
 .table-container {
-  max-width: 2000px;
+  max-width: 1600px;
   width: 90%;
   margin: 1rem auto;
   overflow: auto;
@@ -173,7 +173,7 @@ function getRocketColor(value,type){
   const val=parseInt(value);
   let min,max;
   if(type==="NVL"){ min=30; max=42; } 
-  else { min=24; max=39; }
+  else { min=18; max=38; }
   const ratio=Math.min(1,Math.max(0,(val-min)/(max-min)));
   const r=255, g=Math.floor(165*(1-ratio)), b=92; // vivid orange gradient
   return `rgb(${r},${g},${b})`;
@@ -182,7 +182,7 @@ function getRocketColor(value,type){
 function getCannonColor(value){
   if(value==="—") return "#aaa";
   const val=parseInt(value);
-  const min=40,max=58;
+  const min=28,max=58;
   const ratio=Math.min(1,Math.max(0,(val-min)/(max-min)));
   const r=Math.floor(100*(1-ratio)), g=200, b=255; // vivid blue gradient
   return `rgb(${r},${g},${b})`;
