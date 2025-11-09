@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SSC Rocket Jump Records</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap');
 
 :root {
   --bg-main: #3a3a3a;
@@ -17,7 +17,7 @@
 
 body {
   margin: 0;
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Roboto Slab', serif;
   background-color: var(--bg-main);
   color: var(--text-main);
   display: flex;
@@ -54,7 +54,7 @@ header h1 {
   font-size: 2.5rem;
   color: #ffb84d;
   margin: 0.3rem 0;
-  text-shadow: 0 0 6px rgba(255,184,77,0.5);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
 }
 
 header p {
@@ -71,6 +71,7 @@ header p {
   font-size: 1rem;
   max-width: 700px;
   line-height: 1.5;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
 }
 .definitions strong { color: #ffa65c; }
 
@@ -105,6 +106,7 @@ th, td {
   border-bottom: 1px solid var(--border-color);
   font-size: 2.3rem;
   word-wrap: break-word;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
 }
 
 th:last-child, td:last-child { border-right: none; }
@@ -115,6 +117,11 @@ th {
 
 tr:nth-child(even) { background-color: rgba(255,255,255,0.05); }
 
+/* Glow highlight for row + column hover */
+.highlighted {
+  background-color: rgba(255, 184, 77, 0.25) !important;
+}
+
 footer {
   text-align: center;
   padding: 0.5rem;
@@ -124,17 +131,12 @@ footer {
 footer a { color: #ffa65c; text-decoration: none; }
 footer a:hover { text-decoration: underline; }
 
-/* Glow highlight for row + column hover */
-.highlighted {
-  background-color: rgba(255, 184, 77, 0.25) !important;
-}
-
 </style>
 </head>
 <body>
 <header>
   <h1>Serious Sam Classic Rocket Jump Records</h1>
-  <p>Detailed jumping records table for jumpers. To apply, join the <a href="https://t.me/Serious_Sam_Hyper_Server" target="_blank" style="color:#ff5080;">Telegram Channel</a></p>
+  <p>Detailed jumping records table for jumpers. To apply, join the <a href="https://t.me/Serious_Sam_Hyper_Server" target="_blank" style="color:#ffa65c;">Telegram Channel</a>.</p>
 </header>
 
 <div class="definitions">
@@ -162,8 +164,7 @@ footer a:hover { text-decoration: underline; }
 </div>
 
 <footer>
-  Made with ChatGPT • 
-  <a href="https://github.com/Vilkro/ssc-rocketjumping" style="color:#ff8c00;">GitHub</a>
+  Made by SSC Jumpers
 </footer>
 
 <script>
@@ -178,7 +179,7 @@ function getRocketColor(value,type){
   const val=parseInt(value);
   let min,max;
   if(type==="NVL"){ min=32; max=42; } 
-  else { min=28; max=38; }
+  else { min=28; max=40; }
   const ratio=Math.min(1,Math.max(0,(val-min)/(max-min)));
   const r=255, g=Math.floor(165*(1-ratio)), b=92; // vivid orange gradient
   return `rgb(${r},${g},${b})`;
@@ -187,7 +188,7 @@ function getRocketColor(value,type){
 function getCannonColor(value){
   if(value==="—") return "#aaa";
   const val=parseInt(value);
-  const min=40,max=58;
+  const min=32,max=58;
   const ratio=Math.min(1,Math.max(0,(val-min)/(max-min)));
   const r=Math.floor(100*(1-ratio)), g=Math.floor(200*(1-ratio)), b=255; // vivid blue gradient
   return `rgb(${r},${g},${b})`;
