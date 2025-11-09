@@ -16,7 +16,7 @@
   --text-secondary: #aaa;
   --border-color: #555;
   --highlight-rocket: rgba(255,184,77,0.25);
-  --highlight-cannon: rgba(100,200,255,0.25);
+  --highlight-cannon: rgba(150,100,255,0.25);
 }
 
 body {
@@ -92,7 +92,6 @@ thead th {
 
 th:first-child, td:first-child { width:220px; min-width:220px; text-align:left; padding-left:1rem; }
 th:nth-child(2), td:nth-child(2) { width:220px; min-width:220px; text-align:left; padding-left:1rem; }
-
 th:nth-child(n+3), td:nth-child(n+3) { width:165px; min-width:165px; }
 
 td {
@@ -104,44 +103,19 @@ td {
   word-wrap:break-word;
   text-shadow:1px 1px 2px rgba(0,0,0,0.7);
   overflow:hidden;
+  transition: background-color 0.2s;
 }
 
 th:last-child, td:last-child { border-right:none; }
 tr:nth-child(even) td { background-color: rgba(255,255,255,0.05); }
 
-/* Smooth hover glow transition */
-td {
-  transition: background-color 0.2s;
-}
-
-/* Cell hover highlight */
+/* Hover highlight for cells */
 #recordsTable td:hover {
-  background-color: rgba(255, 184, 77, 0.3); /* soft glow */
-  transition: background-color 0.2s ease;
-}
-
-/* Optional: different color for rockets and cannon */
-#recordsTable td.rocket:hover {
-  background-color: rgba(255, 184, 77, 0.3);
-}
-#recordsTable td.cannon:hover {
-  background-color: rgba(100, 200, 255, 0.3);
-}
-
-/* Hover highlight for all cells */
-#recordsTable td:hover {
-  background-color: rgba(255, 184, 77, 0.25); /* soft orange glow */
-  transition: background-color 0.2s ease;
-}
-
-/* Optional: different for rocket vs cannon */
-#recordsTable td.rocket:hover {
   background-color: rgba(255, 184, 77, 0.25);
 }
 #recordsTable td.cannon:hover {
-  background-color: rgba(150, 100, 255, 0.25); /* subtle purple glow */
+  background-color: rgba(150, 100, 255, 0.25);
 }
-
 
 footer { text-align:center; padding:0.5rem; color: var(--text-secondary); font-size:1rem; }
 footer a { color:#ffa65c; text-decoration:none; }
@@ -194,7 +168,7 @@ const records = [
 ];
 
 function getRocketColor(value,type){
-  if(value==="—") return "#aaa";
+  if(value==="—" || value==="-" ) return "#aaa";
   const val=parseInt(value);
   let min,max;
   if(type==="NVL"){min=36;max=42;} else {min=30;max=40;}
@@ -202,14 +176,31 @@ function getRocketColor(value,type){
   const r=255,g=Math.floor(165*(1-ratio)),b=92;
   return `rgb(${r},${g},${b})`;
 }
+
 function getCannonColor(value){
-  if(value==="—") return "#aaa";
+  if(value==="—" || value==="-" ) return "#aaa";
   const val=parseInt(value);
-  const min=38,max=58;
+  const min=40,max=58;
   const ratio=Math.min(1,Math.max(0,(val-min)/(max-min)));
-  const r=Math.floor(0+80*ratio), g=Math.floor(150-50*(ratio)), b=255;
+  const r = Math.floor(0 + 100*ratio); // subtle red for purple
+  const g = Math.floor(150 - 60*ratio); 
+  const b = 255;
   return `rgb(${r},${g},${b})`;
 }
+
+// Compute sum of all numeric values per record
+function getRowSum(r){
+  const vals = [r.rocketVL, r.rocketVLE, r.rocketVIE, r.rocketNVL, r.cannonVL, r.cannonVLE, r.cannonNVL];
+  let sum=0;
+  vals.forEach(v=>{
+    const n=parseInt(v);
+    if(!isNaN(n)) sum+=n;
+  });
+  return sum;
+}
+
+// Sort records by sum descending
+records.sort((a,b)=>getRowSum(b)-getRowSum(a));
 
 // Populate table
 const tbody=document.querySelector("#recordsTable tbody");
@@ -234,28 +225,6 @@ records.forEach(r=>{
     td.style.color=getCannonColor(td.textContent);
   });
   tbody.appendChild(row);
-});
-
-// Hover glow row + column
-const table=document.getElementById('recordsTable');
-const cells=table.querySelectorAll('tbody td');
-cells.forEach(cell=>{
-  cell.addEventListener('mouseenter',()=>{
-    const colIndex=cell.cellIndex;
-    const row=cell.parentElement;
-    let glowColor= (colIndex>=6) ? 'var(--highlight-cannon)' : (colIndex>=2) ? 'var(--highlight-rocket)' : 'rgba(255,255,255,0.1)';
-    row.style.backgroundColor=glowColor;
-    table.querySelectorAll('tbody tr').forEach(tr=>{
-      if(tr.children[colIndex]) tr.children[colIndex].style.backgroundColor=glowColor;
-    });
-  });
-  cell.addEventListener('mouseleave',()=>{
-    const colIndex=cell.cellIndex;
-    table.querySelectorAll('tbody tr').forEach(tr=>{
-      if(tr.children[colIndex]) tr.children[colIndex].style.backgroundColor='';
-    });
-    cell.parentElement.style.backgroundColor='';
-  });
 });
 </script>
 </body>
