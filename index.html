@@ -306,18 +306,18 @@ records.sort((a,b)=>getRowSum(b)-getRowSum(a));
 
 const tbody=document.querySelector("#recordsTable tbody");
 function getFontWeight(value, min, max, thresholdRatio = 0.6) {
-  if (value === "—" || value === "-") return 400;
+  if (value === "—" || value === "-") return 250;
   const v = parseFloat(value);
-  if (isNaN(v)) return 400;
+  if (isNaN(v)) return 250;
 
   // Normalize 0–1 based on min/max
   const ratio = Math.max(0, Math.min(1, (v - min) / (max - min)));
 
   // Font weight only increases when value exceeds thresholdRatio (e.g. 60% of range)
-  if (ratio < thresholdRatio) return 400;
+  if (ratio < thresholdRatio) return 250;
 
   const boosted = (ratio - thresholdRatio) / (1 - thresholdRatio); // 0–1 after threshold
-  return Math.round(400 + boosted * 500); // scales up to 900
+  return Math.round(250 + boosted * 500); // scales up to 900
 }
 
 records.forEach((r, index) => {
