@@ -24,22 +24,33 @@ body {
   font-family: "Fira Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
-  background: linear-gradient(to bottom, #1a1f26, #232b36);
-  position: relative;
   color: var(--text-main);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   min-height: 100vh;
+  background:
+     linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+     radial-gradient(68% 58% at 50% 50%, #c81e3a 0%, #a51d35 16%, #7d1a2f 32%, #591828 46%, #3c1722 60%, #2a151d 72%, #1f1317 84%, #141013 94%, #0a0a0a 100%),
+     radial-gradient(90% 75% at 50% 50%, rgba(228,42,66,0.06) 0%, rgba(228,42,66,0) 55%),
+     radial-gradient(150% 120% at 8% 8%, rgba(0,0,0,0) 42%, #0b0a0a 82%, #070707 100%),
+     radial-gradient(150% 120% at 92% 92%, rgba(0,0,0,0) 42%, #0b0a0a 82%, #070707 100%),
+     radial-gradient(60% 50% at 50% 60%, rgba(240,60,80,0.06), rgba(0,0,0,0) 60%),
+     #050505;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  position: relative;
 }
 
-body::before {
-  background-color:black;
-  background-image:
-  repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 40px),
-  repeating-linear-gradient(45deg, rgba(0,255,128,0.09) 0, rgba(0,255,128,0.09) 1px, transparent 1px, transparent 20px),
-  repeating-linear-gradient(-45deg, rgba(255,0,128,0.10) 0, rgba(255,0,128,0.10) 1px, transparent 1px, transparent 30px),
-  repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 80px),
-  radial-gradient(circle at 60% 40%, rgba(0,255,128,0.05) 0, transparent 60%)
-  backgroundSize: 80px 80px, 40px 40px, 60px 60px, 80px 80px, 100% 100%;
-  backgroundPosition: 0 0, 0 0, 0 0, 40px 40px, center;
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.5) 100%);
+  opacity: 0.95;
+  z-index: 0;
 }
 
 @keyframes rotateHex {
@@ -270,7 +281,7 @@ const records = [
 ];
 
 const rocketRanges = { VL:[22,34], VLE:[23,35], VIE:[22,31], NVL:[26,39] };
-const cannonRanges = { VL:[30,54], VLE:[32,55], NVL:[32,56] };
+const cannonRanges = { VL:[30,52], VLE:[31,53], NVL:[32,54] };
 
 function getRocketColor(value, type){
   if(value==="—" || value==="-" ) return "#aaa";
@@ -304,14 +315,19 @@ records.sort((a,b)=>getRowSum(b)-getRowSum(a));
 
 const tbody=document.querySelector("#recordsTable tbody");
 
-function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.8) {
+function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.65) {
   if (value === "—" || value === "-") return 250;
   const v = parseFloat(value);
   if (isNaN(v)) return 250;
   const ranges = isRocket ? rocketRanges : cannonRanges;
   const [min, max] = ranges[type] || [0, 100];
   const ratio = Math.max(0, Math.min(1, (v - min) / (max - min)));
-  return Math.round(250 + ratio * (900 - 450));
+  if (ratio < thresholdRatio) {
+    return Math.round(250 + ratio * (900 - 450));
+    } else {
+    const boosted = (ratio - thresholdRatio) / (1 - thresholdRatio);
+    return Math.round(250 + boosted * 550);
+  }
 }
 
 function applyCellStyles() {
