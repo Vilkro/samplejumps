@@ -29,12 +29,6 @@ body {
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  background:
-    linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-    radial-gradient(85% 75% at 50% 50%, #f1b43c 0%, #e0862f 25%, #b25b23 45%, #6b3d1c 65%, #2e1d11 80%, #0e0b08 100%),
-    radial-gradient(120% 100% at 10% 10%, rgba(0,0,0,0) 40%, #0b0a09 85%, #000000 100%),
-    radial-gradient(120% 100% at 90% 90%, rgba(0,0,0,0) 40%, #0b0a09 85%, #000000 100%),
-    #050505;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
@@ -309,7 +303,7 @@ records.sort((a,b)=>getRowSum(b)-getRowSum(a));
 
 const tbody=document.querySelector("#recordsTable tbody");
 
-function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.86) {
+function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.9) {
   if (value === "—" || value === "-") return 250;
   const v = parseFloat(value);
   if (isNaN(v)) return 250;
@@ -317,10 +311,10 @@ function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.8
   const [min, max] = ranges[type] || [0, 100];
   const ratio = Math.max(0, Math.min(1, (v - min) / (max - min)));
   if (ratio < thresholdRatio) {
-    return Math.round(250 + ratio * (400 - 250) / thresholdRatio);
+    return Math.round(250 + ratio * 400;
     } else {
     const boosted = (ratio - thresholdRatio) / (1 - thresholdRatio);
-    return Math.round(400 + boosted * 500);
+    return Math.round(250 + boosted * 650);
   }
 }
 
