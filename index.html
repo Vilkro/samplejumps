@@ -311,9 +311,9 @@ function getFontWeight(value, min, max, thresholdRatio = 0.85) {
   const v = parseFloat(value);
   if (isNaN(v)) return 250;
   const ratio = Math.max(0, Math.min(1, (v - min) / (max - min)));
-  if (ratio < thresholdRatio) return 250;
+  if (ratio < thresholdRatio) return 400;
   const boosted = (ratio - thresholdRatio) / (1 - thresholdRatio);
-  return Math.round(250 + boosted * 450);
+  return Math.round(250 + boosted * 400);
 }
 
 records.forEach((r, index) => {
