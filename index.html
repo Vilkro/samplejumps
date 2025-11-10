@@ -314,7 +314,7 @@ function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.8
   const ranges = isRocket ? rocketRanges : cannonRanges;
   const [min, max] = ranges[type] || [0, 100];
   const ratio = Math.max(0, Math.min(1, (v - min) / (max - min)));
-  return Math.round(250 + ratio * (900 - 250));
+  return Math.round(250 + ratio * (900 - 450));
 }
 
 function applyCellStyles() {
