@@ -317,6 +317,35 @@ function getFontWeight(value, min, max, thresholdRatio = 0.7) {
   return Math.round(250 + boosted * 450);
 }
 
+function applyCellStyles() {
+  const rows = document.querySelectorAll("tbody tr");
+
+  rows.forEach(row => {
+    const cells = row.querySelectorAll("td");
+
+    cells.forEach((cell, index) => {
+      const text = cell.textContent.trim();
+      const value = parseFloat(text);
+      if (isNaN(value)) return;
+
+      let color, weight;
+
+      if (index >= 3 && index <= 6) { // rocket columns
+        const min = 30, max = 42;
+        color = getRocketColor(value, "VL");
+        weight = getFontWeight(value, min, max);
+      } else if (index >= 7 && index <= 9) { // cannon columns
+        const min = 40, max = 58;
+        color = getCannonColor(value, "VL");
+        weight = getFontWeight(value, min, max);
+      }
+
+      cell.style.color = color;
+      cell.style.fontWeight = weight;
+    });
+  });
+}
+  
 records.forEach((r, index) => {
   const row = document.createElement("tr");
   row.innerHTML = `
@@ -350,6 +379,8 @@ records.forEach((r, index) => {
 
   tbody.appendChild(row);
 });
+
+applyCellStyles();
 
 const table = document.getElementById('recordsTable');
 table.querySelectorAll('tbody td').forEach(cell=>{
