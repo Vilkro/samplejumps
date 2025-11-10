@@ -317,7 +317,7 @@ function getFontWeight(value, min, max, thresholdRatio = 0.7) {
     return Math.round(lowWeight);
   }
   const boosted = (ratio - thresholdRatio) / (1 - thresholdRatio);
-  const weight = 400 + boosted * 400;
+  const weight = 400 + Math.pow(boosted, 1.2) * 450;
   return Math.round(weight);
 }
 
