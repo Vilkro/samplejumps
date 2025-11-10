@@ -31,7 +31,7 @@ body {
   min-height: 100vh;
   background:
      linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-     radial-gradient(68% 58% at 50% 50%, #c81e3a 0%, #a51d35 16%, #7d1a2f 32%, #591828 46%, #3c1722 60%, #2a151d 72%, #1f1317 84%, #141013 94%, #0a0a0a 100%),
+     radial-gradient(90% 80% at 50% 50%, #c81e3a 0%, #a51d35 20%, #7d1a2f 40%, #591828 60%, #3c1722 75%, #1f1317 90%, #0a0a0a 100%)
      radial-gradient(90% 75% at 50% 50%, rgba(66,42,228,0.06) 0%, rgba(66,42,228,0) 55%),
      radial-gradient(150% 120% at 8% 8%, rgba(0,0,0,0) 42%, #0b0a0a 82%, #070707 100%),
      radial-gradient(150% 120% at 92% 92%, rgba(0,0,0,0) 42%, #0b0a0a 82%, #070707 100%),
@@ -318,10 +318,10 @@ function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.7
   const [min, max] = ranges[type] || [0, 100];
   const ratio = Math.max(0, Math.min(1, (v - min) / (max - min)));
   if (ratio < thresholdRatio) {
-    return Math.round(250 + ratio * (900 - 450));
+    return Math.round(250 + ratio * (400 - 250) / thresholdRatio);
     } else {
     const boosted = (ratio - thresholdRatio) / (1 - thresholdRatio);
-    return Math.round(250 + boosted * 550);
+    return Math.round(400 + boosted * 500);
   }
 }
 
