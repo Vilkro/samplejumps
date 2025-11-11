@@ -310,7 +310,7 @@ records.sort((a,b)=>getRowSum(b)-getRowSum(a));
 
 const tbody=document.querySelector("#recordsTable tbody");
 
-function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.95) {
+function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.985) {
   if (value === "—" || value === "-") return 250;
   const v = parseFloat(value);
   if (isNaN(v)) return 250;
@@ -319,10 +319,10 @@ function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.9
   const ratio = Math.max(0, Math.min(1, (v - min) / (max - min)));
   if (ratio < 0.7) {
     return 250 + ratio * (400 - 250) / 0.7;
-  } else if (ratio < 0.97) {
-    return 400 + (ratio - 0.7) * (600 - 400) / (0.97 - 0.7);
+  } else if (ratio < 0.985) {
+    return 400 + (ratio - 0.7) * (600 - 400) / (0.985 - 0.7);
   } else {
-    return 600 + (ratio - 0.97) * (900 - 600) / (1 - 0.97);
+    return 600 + (ratio - 0.985) * (900 - 600) / (1 - 0.985);
   }
 }
 
