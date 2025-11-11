@@ -310,7 +310,6 @@ records.sort((a,b)=>getRowSum(b)-getRowSum(a));
 
 const tbody=document.querySelector("#recordsTable tbody");
 
-  //thickness for height values
 function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.95) {
   if (value === "—" || value === "-") return 250;
   const v = parseFloat(value);
@@ -320,11 +319,11 @@ function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.9
   const ratio = Math.max(0, Math.min(1, (v - min) / (max - min)));
   if (ratio < 0.65) {
     return 250 + ratio * (400 - 250) / 0.65;
-  } else if (ratio < 0.95) {
-    return 400 + (ratio - 0.65) * (600 - 400) / (0.95 - 0.65);
+  } else if (ratio < 0.99) {
+    return 400 + (ratio - 0.65) * (500 - 400) / (0.99 - 0.65);
   } else {
-    const boosted = Math.pow((ratio - 0.95) / 0.05, 0.65);
-    return Math.round(600 + boosted * (900 - 600));
+    const boosted = Math.pow((ratio - 0.99) / 0.05, 0.65);
+    return Math.round(500 + boosted * (900 - 500));
   }
 }
 
