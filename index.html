@@ -310,19 +310,20 @@ records.sort((a,b)=>getRowSum(b)-getRowSum(a));
 
 const tbody=document.querySelector("#recordsTable tbody");
 
-function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.985) {
+function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.95) {
   if (value === "—" || value === "-") return 250;
   const v = parseFloat(value);
   if (isNaN(v)) return 250;
   const ranges = isRocket ? rocketRanges : cannonRanges;
   const [min, max] = ranges[type] || [0, 100];
   const ratio = Math.max(0, Math.min(1, (v - min) / (max - min)));
-  if (ratio < 0.7) {
-    return 250 + ratio * (400 - 250) / 0.7;
-  } else if (ratio < 0.985) {
-    return 400 + (ratio - 0.7) * (600 - 400) / (0.985 - 0.7);
+  if (ratio < 0.65) {
+    return 250 + ratio * (400 - 250) / 0.65;
+  } else if (ratio < 0.95) {
+    return 400 + (ratio - 0.65) * (600 - 400) / (0.95 - 0.65);
   } else {
-    return 600 + (ratio - 0.985) * (900 - 600) / (1 - 0.985);
+    const boosted = Math.pow((ratio - 0.95) / 0.05, 0.65);
+    return Math.round(600 + boosted * (900 - 600));
   }
 }
 
