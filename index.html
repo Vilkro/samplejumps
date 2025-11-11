@@ -99,12 +99,11 @@ header p {
   opacity:0.95;
 }
 
-/* Make table layout adaptive so columns don't get stuck at large fixed widths */
 table {
   border-collapse:collapse;
   width:100%;
   table-layout: auto;
-  min-width: 880px; /* ensures reasonable horizontal space on desktop, but allows shrink/scroll */
+  min-width: 880px;
 }
 thead th {
   border-right:1px solid var(--border-color);
@@ -114,7 +113,6 @@ thead th {
   font-size:2.3rem;
 }
 
-/* first column narrow */
 th:first-child, td:first-child {
   width:33px;
   min-width:33px;
@@ -122,12 +120,10 @@ th:first-child, td:first-child {
   background:rgba(200,200,200,0.12);
 }
 
-/* header cells for Name/Country centered */
 th:nth-child(2), th:nth-child(3) {
   text-align:center;
 }
 
-/* data cells for Name and Country left-aligned (user request) */
 td:nth-child(2), td:nth-child(3) {
   text-align:left;
   padding-left:1rem;
@@ -137,7 +133,6 @@ td:nth-child(2), td:nth-child(3) {
   text-overflow: ellipsis;
 }
 
-/* rocket/cannon numeric columns: allow flexible width but set comfortable min-width */
 th:nth-child(n+4), td:nth-child(n+4) {
   min-width: 100px;
   max-width: 220px;
@@ -145,19 +140,16 @@ th:nth-child(n+4), td:nth-child(n+4) {
   padding: 0.8rem 0.5rem;
 }
 
-/* ensure rocket/cannon value cells specialized classes centered */
 td.rocket, td.cannon {
   text-align: center;
 }
 
-/* smaller font-size on narrow screens */
 @media (max-width: 900px) {
   table { min-width: 760px; }
   thead th { font-size: 1.2rem; }
   td { font-size: 1.1rem; padding:0.6rem 0.4rem; }
 }
 
-/* mobile adjustments: allow horizontal scroll, keep layout usable */
 @media (max-width: 520px) {
   .table-container { width: 98%; }
   table { min-width: 700px; }
@@ -213,8 +205,8 @@ footer a:hover { text-decoration:underline; }
 <b>VL</b> = Vertical &nbsp•&nbsp <b>VLE</b> = Vertical Express &nbsp•&nbsp <b>VIE</b> = Very Important Edge &nbsp•&nbsp <b>NVL</b> = Not Vertical<br>
 <strong>Difficulty:</strong><br>
 <span class="legend-inline">
-<b>Rocket:</b> <span class="legend-color rocket-easy"></span> Easy <span class="legend-color rocket-hard"></span> Hard <span class="legend-color exceptional">Absurd</span> &nbsp•&nbsp
-<b>Cannon:</b> <span class="legend-color cannon-easy"></span> Easy <span class="legend-color cannon-hard"></span> Hard <span class="legend-color exceptional">Absurd</span>  
+<b>Rocket:</b> <span class="legend-color rocket-easy"></span> Easy <span class="legend-color rocket-hard"></span> Hard <span class="legend-color exceptional"> Absurd </span> &nbsp•&nbsp
+<b>Cannon:</b> <span class="legend-color cannon-easy"></span> Easy <span class="legend-color cannon-hard"></span> Hard <span class="legend-color exceptional"> Absurd </span>  
 </span>
 </div>
 
@@ -247,7 +239,8 @@ footer a:hover { text-decoration:underline; }
 </div>
 
 <footer>Table includes strictly verified jumps<br></footer>
-
+<br>
+  
 <script>
 const records = [
   { player:"Mask",country:"Russia",rocketVL:"36",rocketVLE:"38",rocketVIE:"35",rocketNVL:"41",cannonVL:"53",cannonVLE:"48",cannonNVL:"52" },
