@@ -95,35 +95,15 @@ header p {
   border-radius:10px;
   border:3.5px solid var(--border-color);
   box-shadow:0 8px 30px rgba(0,0,0,0.25);
-  opacity:0.9;
-  transform-origin: center center;
-  transition: transform 0.3s ease;
+  opacity:0.95;
 }
 
-.zoom-controls {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
-}
-.zoom-controls button {
-  background: rgba(255,180,70,0.1);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  color: var(--text-main);
-  font-size: 1.2rem;
-  padding: 0.3rem 0.7rem;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-.zoom-controls button:hover {
-  background: rgba(255,180,70,0.3);
-}
-
+/* Make table layout adaptive so columns don't get stuck at large fixed widths */
 table {
   border-collapse:collapse;
   width:100%;
-  table-layout: fixed;
+  table-layout: auto;
+  min-width: 880px; /* ensures reasonable horizontal space on desktop, but allows shrink/scroll */
 }
 thead th {
   border-right:1px solid var(--border-color);
@@ -132,33 +112,65 @@ thead th {
   text-align:center;
   font-size:2.3rem;
 }
+
+/* first column narrow */
 th:first-child, td:first-child {
   width:33px;
   min-width:33px;
   text-align:center;
   background:rgba(200,200,200,0.12);
 }
+
+/* header cells for Name/Country centered */
 th:nth-child(2), th:nth-child(3) {
   text-align:center;
 }
+
+/* data cells for Name and Country left-aligned (user request) */
 td:nth-child(2), td:nth-child(3) {
   text-align:left;
   padding-left:1rem;
+  white-space: nowrap;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
+/* rocket/cannon numeric columns: allow flexible width but set comfortable min-width */
 th:nth-child(n+4), td:nth-child(n+4) {
-  width:161px;
-  min-width:161px;
+  min-width: 100px;
+  max-width: 220px;
+  text-align:center;
+  padding: 0.8rem 0.5rem;
+}
+
+/* ensure rocket/cannon value cells specialized classes centered */
+td.rocket, td.cannon {
   text-align: center;
 }
+
+/* smaller font-size on narrow screens */
+@media (max-width: 900px) {
+  table { min-width: 760px; }
+  thead th { font-size: 1.2rem; }
+  td { font-size: 1.1rem; padding:0.6rem 0.4rem; }
+}
+
+/* mobile adjustments: allow horizontal scroll, keep layout usable */
+@media (max-width: 520px) {
+  .table-container { width: 98%; }
+  table { min-width: 700px; }
+  thead th { font-size: 1rem; padding: 0.6rem 0.3rem; }
+  td { font-size: 1rem; padding: 0.5rem 0.3rem; }
+}
+
 td {
-  padding:1rem 0.5rem;
-  text-align:center;
   border-right:1px solid var(--border-color);
   border-bottom:1px solid var(--border-color);
   font-size:2.3rem;
   text-shadow:1px 1px 2px rgba(0,0,0,0.7);
-  overflow:hidden;
   transition:background-color 0.25s ease;
+  overflow:hidden;
 }
 th:last-child, td:last-child { border-right:none; }
 tr:nth-child(even) td { background-color:rgba(255,255,255,0.05); }
@@ -191,7 +203,7 @@ footer a:hover { text-decoration:underline; }
 <h1>Rocket Jump Records in Serious Sam Classic</h1>
 <p>Detailed jumping records table for jumpers. To apply, join the
 <a href="https://t.me/Serious_Sam_Hyper_Server" target="_blank" style="color:#ffa65c; text-decoration:none">Telegram Channel</a>.</p>
-<p>All numbers are measured with in-game coordinates and done with 100 hp.</p>  
+<p>All numbers are measured with in-game coordinates and done with 100 hp.</p>
 <p>Players are sorted by the sum of their values. Bigger jumps have lower probability of success.</p>
 </header>
 
@@ -231,11 +243,6 @@ footer a:hover { text-decoration:underline; }
 </thead>
 <tbody></tbody>
 </table>
-</div>
-
-<div class="zoom-controls">
-  <button id="zoomOut">−</button>
-  <button id="zoomIn">+</button>
 </div>
 
 <footer>Table of verified jumps</footer>
@@ -338,22 +345,6 @@ table.querySelectorAll('tbody td').forEach(cell=>{
     cell.parentElement.querySelectorAll('td').forEach(td=>td.style.backgroundColor='');
   });
 });
-
-let zoom = 1;
-const tableContainer = document.getElementById('tableContainer');
-document.getElementById('zoomIn').addEventListener('click', ()=>{
-  zoom = Math.min(zoom + 0.1, 1.8);
-  tableContainer.style.transform = `scale(${zoom})`;
-});
-document.getElementById('zoomOut').addEventListener('click', ()=>{
-  zoom = Math.max(zoom - 0.1, 0.6);
-  tableContainer.style.transform = `scale(${zoom})`;
-});
-document.getElementById('resetZoom').addEventListener('click', ()=>{
-  zoom = 1;
-  tableContainer.style.transform = 'scale(1)';
-});
-  
 </script>
 </body>
 </html>
