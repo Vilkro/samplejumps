@@ -138,7 +138,11 @@ th:first-child, td:first-child {
   text-align:center;
   background:rgba(200,200,200,0.12);
 }
-th:nth-child(2), td:nth-child(2),
+th:nth-child(2), td:nth-child(2) {
+  width:220px;
+  min-width:220px;
+  padding-left:1rem;
+}
 th:nth-child(3), td:nth-child(3) {
   width:220px;
   min-width:220px;
@@ -192,6 +196,7 @@ footer a:hover { text-decoration:underline; }
 <h1>Rocket Jump Records in Serious Sam Classic</h1>
 <p>Detailed jumping records table for jumpers. To apply, join the
 <a href="https://t.me/Serious_Sam_Hyper_Server" target="_blank" style="color:#ffa65c; text-decoration:none">Telegram Channel</a>.</p>
+<p>All numbers are measured with in-game coordinates and done with 100 hp.</p>  
 <p>Players are sorted by the sum of their values. Bigger jumps have lower probability of success.</p>
 </header>
 
@@ -251,7 +256,7 @@ const records = [
   { player:"Test",country:"ew",rocketVL:"32",rocketVLE:"31",rocketVIE:"33",rocketNVL:"28",cannonVL:"40",cannonVLE:"36",cannonNVL:"50" },
   { player:"Supersniper",country:"Greece",rocketVL:"34",rocketVLE:"-",rocketVIE:"-",rocketNVL:"36",cannonVL:"48",cannonVLE:"-",cannonNVL:"-" },
   { player:"Sony",country:"Argentina",rocketVL:"36",rocketVLE:"36",rocketVIE:"-",rocketNVL:"-",cannonVL:"-",cannonVLE:"56",cannonNVL:"56" },
-  { player:"Meteor",country:"Germany",rocketVL:"34",rocketVLE:"36",rocketVIE:"32",rocketNVL:"-",cannonVL:"42",cannonVLE:"42",cannonNVL:"900" }
+  { player:"Meteor",country:"Germany",rocketVL:"34",rocketVLE:"36",rocketVIE:"32",rocketNVL:"-",cannonVL:"42",cannonVLE:"42",cannonNVL:"54" }
 ];
 
 const rocketRanges = { VL:[22,34], VLE:[23,35], VIE:[22,31], NVL:[26,39] };
@@ -285,7 +290,7 @@ function getFontWeightAligned(value,type,isRocket=true){
   const ratio=Math.max(0,Math.min(1,(v-min)/(max-min)));
   if(v<=max)return Math.round(250+ratio*140);
   const extra=Math.min(4,v-max);
-  return Math.round(390+extra*110); // slightly stricter threshold
+  return Math.round(390+extra*110);
 }
 
 function getRowSum(r){
@@ -339,7 +344,6 @@ table.querySelectorAll('tbody td').forEach(cell=>{
   });
 });
 
-// Zoom buttons
 let zoomLevel = 1;
 const zoomable = document.getElementById("tableContainer");
 document.getElementById("zoomIn").addEventListener("click",()=>{
