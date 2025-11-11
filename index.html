@@ -302,15 +302,20 @@ records.sort((a,b)=>getRowSum(b)-getRowSum(a));
 
 const tbody=document.querySelector("#recordsTable tbody");
 
-function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.95) {
+function getFontWeightAligned(value, type, isRocket = true, thresholdRatio = 0.85) {
   if (value === "—" || value === "-") return 250;
   const v = parseFloat(value);
   if (isNaN(v)) return 250;
   const ranges = isRocket ? rocketRanges : cannonRanges;
   const [min, max] = ranges[type] || [0, 100];
-  const ratio = Math.max(0, Math.min(1, (v - min) / (max - min)));
-  const weight = 250 + Math.pow(ratio, 1.5) * (900 - 250);
-  return Math.round(weight);
+  if (ratio < thresholdRatio) {
+    // smooth curve up to mid–high range
+    return Math.round(250 + Math.pow(ratio / thresholdRatio, 1.2) * 200);
+  } else {
+    // sharper boost only for very top values
+    const boosted = (ratio - thresholdRatio) / (1 - thresholdRatio);
+    return Math.round(450 + Math.pow(boosted, 2.2) * 450);
+  }
 }
 
 function applyCellStyles() {
