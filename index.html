@@ -24,7 +24,7 @@ body {
   font-family: "Fira Sans", sans-serif;
   background:
     radial-gradient(circle at 30% 20%, rgba(255,140,60,0.09) 0%, transparent 40%),
-    radial-gradient(circle at 70% 80%, rgba(255,255,255,0.09) 0%, transparent 40%),
+    radial-gradient(circle at 70% 80%, rgba(255,255,255,0.13) 0%, transparent 40%),
     linear-gradient(145deg, #101010 0%, #1a1a1a 50%, #222 100%);
   color: var(--text-main);
   display: flex;
@@ -141,6 +141,11 @@ td:nth-child(3){ text-align:left; }
 th:last-child, td:last-child { border-right:none; }
 tr:nth-child(even) td { background-color:rgba(255,255,255,0.05); }
 
+td.player, th:nth-child(2), th:nth-child(3),
+td.rocket, td.cannon {
+  text-align: center !important;
+}
+
 #recordsTable thead tr:nth-child(1) th { background:rgba(60,60,60,0.95); }
 #recordsTable thead tr:nth-child(2) th:nth-child(1),
 #recordsTable thead tr:nth-child(2) th:nth-child(2),
@@ -175,7 +180,7 @@ footer a:hover { text-decoration:underline; }
 <div class="definitions">
 <strong>Definitions:</strong><br>
 <b>VL</b> = Vertical &nbsp•&nbsp <b>VLE</b> = Vertical Express &nbsp•&nbsp <b>VIE</b> = Very Important Edge &nbsp•&nbsp <b>NVL</b> = Not Vertical<br>
-<strong>Difficulty:</strong>
+<strong>Difficulty:</strong><br>
 <span class="legend-inline">
 Rocket: <span class="legend-color rocket-easy"></span> Easy <span class="legend-color rocket-hard"></span> Hard &nbsp•&nbsp
 Cannon: <span class="legend-color cannon-easy"></span> Easy <span class="legend-color cannon-hard"></span> Hard
